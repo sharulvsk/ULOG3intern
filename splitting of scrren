@@ -1,0 +1,37 @@
+%1st screen
+ figure;
+ subplot(2,2,1);
+ [X,Y,Z] = sphere(50);
+ surf(X,Y,Z);
+ title('Sphere of size 50');
+ xlabel('X');
+ ylabel('Y');
+ zlabel('Z');
+ axis equal;
+ %2nd screen
+ subplot(2,2,2);
+ img = imread("duck.jpg");
+ imshow(img);
+ title('Displayed image');
+ %3rd screen
+ subplot(2,2,3);
+ theta = linspace(0,2*pi,100);
+ r = 1;
+ x = r*cos(theta);
+ y = r*sin(theta);
+ plot(x,y);
+ title('Satellite scenario output');
+ xlabel('X-AXIS');
+ ylabel('Y-AXIS');
+ %4th screen
+ subplot(2,2,4);
+ x = 1:10;
+ y1 = sqrt(x);
+ y2 = sin(x);
+ plot(x,y1,'ro',x,y2,'b*');
+ title('Squae root and sine of x');
+ xlabel('x');
+ ylabel('y');
+ legend('sqrt(x)','sin(x)');
+ grid on;
+ 
