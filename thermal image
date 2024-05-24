@@ -1,0 +1,38 @@
+% Select input and output directories
+inputFolder = uigetdir([], 'Select Input Folder');
+outputFolder = uigetdir([], 'Select Output Folder');
+
+% Infinite loop for continuous processing
+while true
+    % List all .jpg files in the input folder
+    files = dir(fullfile(inputFolder, '*.jpg'));
+    
+    % Check if there are any files to process
+    if ~isempty(files)
+        % Parallel loop for processing images
+        parfor i = 1:numel(files)
+            filename = files(i).name;
+            filepath = fullfile(inputFolder, filename);
+            
+            % Read the image
+            inputImage = imread(filepath);
+            
+            % Convert the image to grayscale
+            grayscaleImage = rgb2gray(inputImage);
+            
+            % Apply the thermal colormap
+            thermalColormap = jet(256);
+            outputImage = ind2rgb(gray2ind(grayscaleImage, 256), thermalColormap);
+            
+            % Construct the output file name
+            [~, name, ext] = fileparts(filename);
+            outputFilename = [name '_thermal' ext];
+            
+            % Save the processed image to the output folder
+            imwrite(outputImage, fullfile(outputFolder, outputFilename));
+        end
+    end
+    
+    % Pause to avoid continuous polling and potential race conditions
+    pause(20);
+end
