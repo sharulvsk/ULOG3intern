@@ -1,0 +1,26 @@
+earthRadius = 6378
+hold on;
+figure;
+[x, y, z] = sphere(50);
+surf(earthRadius * x, earthRadius * y, earthRadius * z);
+colormap([1 0 1]); 
+axis equal;
+grid on;
+
+xlabel('X (km)');
+ylabel('Y (km)');
+zlabel('Z (km)');
+title('Satellite Orbit Animation');
+initialAltitude = 200; 
+initialPosition = [earthRadius + initialAltitude, 0, 0];
+hold on;
+satellite = plot3(initialPosition(1), initialPosition(2), initialPosition(3), 'ro','MarkerSize',20,'MarkerEdgeColor','b','MarkerFaceColor','r');
+orbitRadius = earthRadius + initialAltitude; 
+timeStep = 1; 
+totalTime = 3600;
+for time = 0:timeStep:totalTime
+    angle = deg2rad(time);
+    newPosition = [orbitRadius * cos(angle), orbitRadius * sin(angle), 0];
+    set(satellite, 'XData', newPosition(1), 'YData', newPosition(2), 'ZData', newPosition(3));
+    pause(0.01);
+end
