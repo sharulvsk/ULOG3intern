@@ -1,0 +1,50 @@
+% Select input and output directories
+ULOG3 = uigetdir([], 'Select Input Folder');
+ENHANCEDIMG = uigetdir([], 'Select Output Folder');
+
+% Set the maximum number of files to track
+max_files = 1000;
+processedimage = cell(1, max_files); 
+processed_count = 0;
+
+% Infinite loop for continuous processing
+while true
+    % List all .jpg files in the input folder
+    files = dir(fullfile(ULOG3, '*.jpg'));
+    
+    % Loop through each file
+    for i = 1:numel(files)
+        filename = files(i).name;
+        
+        % Check if the file has already been processed
+        if ~any(strcmp(processedimage, filename))
+            % Read the image
+            filepath = fullfile(ULOG3, filename);
+            input_image = imread(filepath);
+            
+            % Enhance the image
+            enhanced_image = imsharpen(input_image);
+            r = enhanced_image(:,:,1);
+            g = enhanced_image(:,:,2);
+            b = enhanced_image(:,:,3);
+            r = imadjust(r);
+            g = imadjust(g);
+            b = imadjust(b);
+            enhanced_image = cat(3, r, g, b);
+            
+            % Construct the output file name
+            [~, name, ext] = fileparts(filename);
+            outputFilename = [name '_enhanced' ext];
+            
+            % Save the enhanced image to the output folder
+            imwrite(enhanced_image, fullfile(ENHANCEDIMG, outputFilename));
+            
+            % Update the processed image list
+            processed_count = processed_count + 1;
+            processedimage{mod(processed_count - 1, max_files) + 1} = filename;
+        end
+    end
+    
+    % Pause to avoid continuous polling
+    pause(2);
+end
